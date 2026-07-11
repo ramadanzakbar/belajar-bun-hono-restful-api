@@ -1,11 +1,12 @@
 {
-  "name": "belajar-bun-hono-restfull-api",
+  "name": "belajar-bun-hono-restful-api",
   "scripts": {
     "dev": "bun run --hot src/index.ts"
   },
   "dependencies": {
     "@prisma/client": "^7.8.0",
     "hono": "^4.12.28",
+    "winston": "^3.19.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {
