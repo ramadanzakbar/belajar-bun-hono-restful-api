@@ -11,3 +11,28 @@ generator client {
 datasource db {
   provider = "mysql"
 }
+
+model User {
+  username String    @id @db.VarChar(100)
+  password String    @db.VarChar(100)
+  name     String    @db.VarChar(100)
+  token    String    @db.VarChar(255)
+  contacts Contact[]
+
+  @@map("users")
+}
+
+model Contact {
+  id        Int      @id @default(autoincrement()) @db.Int
+  firstName String   @map("first_name") @db.VarChar(100)
+  lastName  String   @map("last_name") @db.VarChar(100)
+  email     String   @unique @db.VarChar(100)
+  phone     String   @db.VarChar(20)
+  username  String   @db.VarChar(100) //hubungan ke user user
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamp(0)
+
+  user User @relation(fields: [username], references: [username])
+
+  @@map("contacts")
+}
