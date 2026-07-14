@@ -4,8 +4,10 @@
     "dev": "bun run --hot src/index.ts"
   },
   "dependencies": {
+    "@prisma/adapter-mariadb": "^7.8.0",
     "@prisma/client": "^7.8.0",
     "hono": "^4.12.28",
+    "mariadb": "^3.5.3",
     "winston": "^3.19.0",
     "zod": "^4.4.3"
   },
