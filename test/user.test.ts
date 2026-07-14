@@ -22,7 +22,7 @@ describe("POST /api/users", () => {
           password: "password",
           name: "test",
         }),
-      })
+      }),
     );
 
     expect(response.status).toBe(201);
@@ -43,7 +43,7 @@ describe("POST /api/users", () => {
           password: "password",
           name: "test",
         }),
-      })
+      }),
     );
 
     const response = await app.fetch(
@@ -55,7 +55,7 @@ describe("POST /api/users", () => {
           password: "password",
           name: "test",
         }),
-      })
+      }),
     );
 
     expect(response.status).toBe(500);
@@ -73,7 +73,7 @@ describe("POST /api/users", () => {
           password: "password",
           name: "test",
         }),
-      })
+      }),
     );
 
     expect(response.status).toBe(500);
@@ -102,7 +102,7 @@ describe("POST /api/users/login", () => {
           password: "password",
           name: "test",
         }),
-      })
+      }),
     );
 
     const response = await app.fetch(
@@ -113,7 +113,7 @@ describe("POST /api/users/login", () => {
           username: "test",
           password: "password",
         }),
-      })
+      }),
     );
 
     expect(response.status).toBe(200);
@@ -134,7 +134,7 @@ describe("POST /api/users/login", () => {
           password: "password",
           name: "test",
         }),
-      })
+      }),
     );
 
     const response = await app.fetch(
@@ -145,7 +145,7 @@ describe("POST /api/users/login", () => {
           username: "test",
           password: "wrongpassword",
         }),
-      })
+      }),
     );
 
     expect(response.status).toBe(500);
@@ -162,7 +162,7 @@ describe("POST /api/users/login", () => {
           username: "nonexistent",
           password: "password",
         }),
-      })
+      }),
     );
 
     expect(response.status).toBe(500);
@@ -179,7 +179,92 @@ describe("POST /api/users/login", () => {
           username: "",
           password: "password",
         }),
-      })
+      }),
+    );
+
+    expect(response.status).toBe(500);
+    const body = await response.json();
+    expect(body.status).toBe("error");
+  });
+});
+
+describe("GET /api/users/current", () => {
+  beforeEach(async () => {
+    await prismaClient.user.deleteMany({ where: { username: "test" } });
+  });
+
+  afterAll(async () => {
+    await prismaClient.$disconnect();
+  });
+
+  async function registerAndLogin() {
+    await app.fetch(
+      new Request("http://localhost/api/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: "test",
+          password: "password",
+          name: "test",
+        }),
+      }),
+    );
+
+    const res = await app.fetch(
+      new Request("http://localhost/api/users/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: "test", password: "password" }),
+      }),
+    );
+
+    const body = await res.json();
+    return body.data.token as string;
+  }
+
+  it("should get current user successfully", async () => {
+    const token = await registerAndLogin();
+
+    const response = await app.fetch(
+      new Request("http://localhost/api/users/current", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body.status).toBe("success");
+    expect(body.data.username).toBe("test");
+    expect(body.data.name).toBe("test");
+    expect(body.data.token).toBeDefined();
+  });
+
+  it("should reject if token is invalid", async () => {
+    const response = await app.fetch(
+      new Request("http://localhost/api/users/current", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer invalid-token",
+        },
+      }),
+    );
+
+    expect(response.status).toBe(500);
+    const body = await response.json();
+    expect(body.status).toBe("error");
+  });
+
+  it("should reject if no Authorization header", async () => {
+    const response = await app.fetch(
+      new Request("http://localhost/api/users/current", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      }),
     );
 
     expect(response.status).toBe(500);

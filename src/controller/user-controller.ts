@@ -27,3 +27,19 @@ userController.post("/api/users/login", async (c) => {
     data: response,
   });
 });
+
+userController.get("/api/users/current", async (c) => {
+  const token = c.req.header("Authorization")?.replace("Bearer ", "");
+
+  if (!token) {
+    throw new Error("Unauthorized");
+  }
+
+  const response = await UserService.get(token);
+
+  return c.json({
+    status: "success",
+    message: "Get user successfully",
+    data: response,
+  });
+});

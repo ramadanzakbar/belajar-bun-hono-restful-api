@@ -51,4 +51,16 @@ export class UserService {
 
     return toUserResponse(updated);
   }
+
+  static async get(token: string): Promise<UserResponse> {
+    const user = await prismaClient.user.findFirst({
+      where: { token },
+    });
+
+    if (!user) {
+      throw new Error("Unauthorized");
+    }
+
+    return toUserResponse(user);
+  }
 }
