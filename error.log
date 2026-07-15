@@ -28,3 +28,12 @@
 {"level":"error","message":"[\n  {\n    \"origin\": \"string\",\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"inclusive\": true,\n    \"path\": [\n      \"username\"\n    ],\n    \"message\": \"Too small: expected string to have >=1 characters\"\n  }\n]","name":"ZodError","request_id":"bce7d7fd-acdb-48ca-a5fc-beb66b49bdd7","stack":"ZodError: [\n  {\n    \"origin\": \"string\",\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"inclusive\": true,\n    \"path\": [\n      \"username\"\n    ],\n    \"message\": \"Too small: expected string to have >=1 characters\"\n  }\n]"}
 {"level":"error","request_id":"bce7d7fd-acdb-48ca-a5fc-beb66b49bdd7"}
 {"level":"error","request_id":"bce7d7fd-acdb-48ca-a5fc-beb66b49bdd7"}
+{"level":"error","request_id":"6e0ba660-7e39-4d64-9983-dd5ad91198c8"}
+{"level":"error","message":"[\n  {\n    \"origin\": \"string\",\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"inclusive\": true,\n    \"path\": [\n      \"username\"\n    ],\n    \"message\": \"Too small: expected string to have >=1 characters\"\n  }\n]","name":"ZodError","request_id":"6e0ba660-7e39-4d64-9983-dd5ad91198c8","stack":"ZodError: [\n  {\n    \"origin\": \"string\",\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"inclusive\": true,\n    \"path\": [\n      \"username\"\n    ],\n    \"message\": \"Too small: expected string to have >=1 characters\"\n  }\n]"}
+{"level":"error","request_id":"6e0ba660-7e39-4d64-9983-dd5ad91198c8"}
+{"level":"error","request_id":"6e0ba660-7e39-4d64-9983-dd5ad91198c8"}
+{"level":"error","message":"[\n  {\n    \"origin\": \"string\",\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"inclusive\": true,\n    \"path\": [\n      \"username\"\n    ],\n    \"message\": \"Too small: expected string to have >=1 characters\"\n  }\n]","name":"ZodError","request_id":"6e0ba660-7e39-4d64-9983-dd5ad91198c8","stack":"ZodError: [\n  {\n    \"origin\": \"string\",\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"inclusive\": true,\n    \"path\": [\n      \"username\"\n    ],\n    \"message\": \"Too small: expected string to have >=1 characters\"\n  }\n]"}
+{"level":"error","request_id":"6e0ba660-7e39-4d64-9983-dd5ad91198c8"}
+{"level":"error","request_id":"6e0ba660-7e39-4d64-9983-dd5ad91198c8"}
+{"level":"error","request_id":"6e0ba660-7e39-4d64-9983-dd5ad91198c8"}
+{"level":"error","request_id":"6e0ba660-7e39-4d64-9983-dd5ad91198c8"}

@@ -1,5 +1,5 @@
 import { prismaClient } from "../applications/database";
-import { LoginUserRequest, RegisterUserRequest, toUserResponse, UserResponse } from "../model/user-model";
+import { LoginUserRequest, RegisterUserRequest, toUserResponse, UpdateUserRequest, UserResponse } from "../model/user-model";
 import { UserValidation } from "../validation/user-validation";
 
 export class UserService {
@@ -62,5 +62,33 @@ export class UserService {
     }
 
     return toUserResponse(user);
+  }
+
+  static async update(token: string, request: UpdateUserRequest): Promise<UserResponse> {
+    request = UserValidation.UPDATE.parse(request);
+
+    const user = await prismaClient.user.findFirst({
+      where: { token },
+    });
+
+    if (!user) {
+      throw new Error("Unauthorized");
+    }
+
+    const data: { name?: string; password?: string } = {};
+    if (request.name) data.name = request.name;
+    if (request.password) {
+      data.password = await Bun.password.hash(request.password, {
+        algorithm: "bcrypt",
+        cost: 10,
+      });
+    }
+
+    const updated = await prismaClient.user.update({
+      where: { username: user.username },
+      data,
+    });
+
+    return toUserResponse(updated);
   }
 }

@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { LoginUserRequest, RegisterUserRequest } from "../model/user-model";
+import { LoginUserRequest, RegisterUserRequest, UpdateUserRequest } from "../model/user-model";
 import { UserService } from "../service/user-service";
 
 export const userController = new Hono();
@@ -40,6 +40,23 @@ userController.get("/api/users/current", async (c) => {
   return c.json({
     status: "success",
     message: "Get user successfully",
+    data: response,
+  });
+});
+
+userController.patch("/api/users/current", async (c) => {
+  const token = c.req.header("Authorization")?.replace("Bearer ", "");
+
+  if (!token) {
+    throw new Error("Unauthorized");
+  }
+
+  const request = await c.req.json() as UpdateUserRequest;
+  const response = await UserService.update(token, request);
+
+  return c.json({
+    status: "success",
+    message: "Update user success",
     data: response,
   });
 });

@@ -272,3 +272,105 @@ describe("GET /api/users/current", () => {
     expect(body.status).toBe("error");
   });
 });
+
+describe("PATCH /api/users/current", () => {
+  beforeEach(async () => {
+    await prismaClient.user.deleteMany({ where: { username: "test" } });
+  });
+
+  afterAll(async () => {
+    await prismaClient.$disconnect();
+  });
+
+  async function registerAndLogin() {
+    await app.fetch(
+      new Request("http://localhost/api/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: "test", password: "password", name: "test" }),
+      }),
+    );
+
+    const res = await app.fetch(
+      new Request("http://localhost/api/users/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: "test", password: "password" }),
+      }),
+    );
+
+    const body = await res.json();
+    return body.data.token as string;
+  }
+
+  it("should update user name successfully", async () => {
+    const token = await registerAndLogin();
+
+    const response = await app.fetch(
+      new Request("http://localhost/api/users/current", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ name: "updated" }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body.status).toBe("success");
+    expect(body.data.name).toBe("updated");
+    expect(body.data.username).toBe("test");
+  });
+
+  it("should update password successfully", async () => {
+    const token = await registerAndLogin();
+
+    const response = await app.fetch(
+      new Request("http://localhost/api/users/current", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ password: "newpassword" }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body.status).toBe("success");
+  });
+
+  it("should reject if token is invalid", async () => {
+    const response = await app.fetch(
+      new Request("http://localhost/api/users/current", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer invalid-token",
+        },
+        body: JSON.stringify({ name: "updated" }),
+      }),
+    );
+
+    expect(response.status).toBe(500);
+    const body = await response.json();
+    expect(body.status).toBe("error");
+  });
+
+  it("should reject if no Authorization header", async () => {
+    const response = await app.fetch(
+      new Request("http://localhost/api/users/current", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: "updated" }),
+      }),
+    );
+
+    expect(response.status).toBe(500);
+    const body = await response.json();
+    expect(body.status).toBe("error");
+  });
+});
